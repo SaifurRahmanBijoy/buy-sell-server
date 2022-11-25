@@ -24,7 +24,7 @@ async function run() {
       .db("wishBoat")
       .collection("categorisedProducts");
 
-    app.get("/categories", async (req, res) => {
+    app.get("/category", async (req, res) => {
       const query = {};
       const results = await categorizedProductsCollection.find(query).toArray();
       res.send(results);
