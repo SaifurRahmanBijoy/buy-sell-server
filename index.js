@@ -2,7 +2,7 @@ const express = require("express");
 const cors = require("cors");
 const port = process.env.PORT || 5000;
 require("dotenv").config();
-const { MongoClient, ServerApiVersion } = require("mongodb");
+const { MongoClient, ServerApiVersion, ObjectId } = require("mongodb");
 
 const app = express();
 
@@ -24,9 +24,17 @@ async function run() {
       .db("wishBoat")
       .collection("categorisedProducts");
 
-    app.get("/category", async (req, res) => {
+    app.get("/categories", async (req, res) => {
       const query = {};
       const results = await categorizedProductsCollection.find(query).toArray();
+      res.send(results);
+    });
+
+    app.get("/category/:id", async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: ObjectId(id) };
+      const results = await categorizedProductsCollection.findOne(query);
+      console.log(results);
       res.send(results);
     });
   } finally {
