@@ -45,6 +45,7 @@ async function run() {
       .collection("categorisedProducts");
     const usersCollection = client.db("wishBoat").collection("users");
     const bookingsCollection = client.db("wishBoat").collection("bookings");
+    const productsCollection = client.db("wishBoat").collection("products");
 
     const verifyAdmin = async (req, res, next) => {
       const decodedEmail = req.decoded.email;
@@ -65,10 +66,21 @@ async function run() {
 
     app.get("/category/:id", async (req, res) => {
       const id = req.params.id;
-      const query = { _id: ObjectId(id) };
-      const results = await categorizedProductsCollection.findOne(query);
+      const query = { category_id: id };
+      const results = await productsCollection.find(query).toArray();
       res.send(results);
     });
+
+    // app.get("/cat/:id", async (req, res) => {
+    //   const id = req.params.id;
+    //   const query = { _id: ObjectId(id) };
+    //   const category = await categorizedProductsCollection.findOne(query);
+    //   const allProducts = category.products;
+    //   const products = await allProducts.insertOne("1");
+
+    //   // console.log(results)
+    //   res.send(products);
+    // });
 
     app.post("/users", async (req, res) => {
       const user = req.body;
