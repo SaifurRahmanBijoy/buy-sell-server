@@ -23,6 +23,9 @@ async function run() {
     const categorizedProductsCollection = client
       .db("wishBoat")
       .collection("categorisedProducts");
+    const usersCollection = client
+      .db("wishBoat")
+      .collection("users");
 
     app.get("/categories", async (req, res) => {
       const query = {};
@@ -36,6 +39,12 @@ async function run() {
       const results = await categorizedProductsCollection.findOne(query);
       console.log(results);
       res.send(results);
+    });
+
+    app.post("/users", async (req, res) => {
+      const user = req.body;
+      const result = await usersCollection.insertOne(user);
+      res.send(result);
     });
   } finally {
   }
