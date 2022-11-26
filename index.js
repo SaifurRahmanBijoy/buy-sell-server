@@ -23,9 +23,7 @@ async function run() {
     const categorizedProductsCollection = client
       .db("wishBoat")
       .collection("categorisedProducts");
-    const usersCollection = client
-      .db("wishBoat")
-      .collection("users");
+    const usersCollection = client.db("wishBoat").collection("users");
 
     app.get("/categories", async (req, res) => {
       const query = {};
@@ -37,7 +35,6 @@ async function run() {
       const id = req.params.id;
       const query = { _id: ObjectId(id) };
       const results = await categorizedProductsCollection.findOne(query);
-      console.log(results);
       res.send(results);
     });
 
@@ -45,6 +42,14 @@ async function run() {
       const user = req.body;
       const result = await usersCollection.insertOne(user);
       res.send(result);
+    });
+
+    app.get("/users/admin/:email", async (req, res) => {
+      const email = req.params.email;
+      const query = { email };
+      const user = await usersCollection.findOne(query);
+      console.log(user);
+      res.send({ isAdmin: user?.role === "admin" });
     });
   } finally {
   }
