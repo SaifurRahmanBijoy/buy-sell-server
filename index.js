@@ -18,6 +18,25 @@ const client = new MongoClient(uri, {
   serverApi: ServerApiVersion.v1,
 });
 
+// verify jwt
+function verifyJWT(req, res, next) {
+  console.log("token inside verifyJWT:", req.headers.authorization);
+  const authHeader = req.headers.authorization;
+  if (!authHeader) {
+    res.status(401).send("Unauthorized Access!");
+  }
+
+  const token = authHeader.split(" ")[1];
+
+  jwt.verify(token, process.env.ACCESS_TOKEN, function (err, decoded) {
+    if (err) {
+      res.status(403).send({ message: "forbidden access" });
+    }
+    req.decoded = decoded;
+    next();
+  });
+}
+
 // apis in try finally
 async function run() {
   try {
@@ -49,7 +68,7 @@ async function run() {
       const email = req.params.email;
       const query = { email };
       const user = await usersCollection.findOne(query);
-      console.log(user);
+      // console.log(user);
       res.send({ isAdmin: user?.role === "admin" });
     });
 
