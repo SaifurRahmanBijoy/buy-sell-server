@@ -64,6 +64,13 @@ async function run() {
       res.send(result);
     });
 
+    app.get("/users/:type", async (req, res) => {
+      const type = req.params.type;
+      const specifiedUsers = { role: type };
+      const result = await usersCollection.find(specifiedUsers).toArray();
+      res.send(result);
+    });
+
     app.get("/users/admin/:email", async (req, res) => {
       const email = req.params.email;
       const query = { email };
