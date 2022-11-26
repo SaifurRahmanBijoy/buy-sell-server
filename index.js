@@ -45,6 +45,17 @@ async function run() {
       .collection("categorisedProducts");
     const usersCollection = client.db("wishBoat").collection("users");
 
+    const verifyAdmin = async (req, res, next) => {
+      const decodedEmail = req.decoded.email;
+      const query = { email: decodedEmail };
+      const user = await usersCollection.findOne(query);
+
+      if (user?.role !== "admin") {
+        return res.status(403).send({ message: "forbidden access" });
+      }
+      next();
+    };
+
     app.get("/categories", async (req, res) => {
       const query = {};
       const results = await categorizedProductsCollection.find(query).toArray();
@@ -71,7 +82,7 @@ async function run() {
       res.send(result);
     });
 
-    app.delete("/users/:id", async (req, res) => {
+    app.delete("/users/:id", verifyJWT, verifyAdmin, async (req, res) => {
       const id = req.params.id;
       const specifiedUsers = { _id: ObjectId(id) };
       const result = await usersCollection.deleteOne(specifiedUsers);
