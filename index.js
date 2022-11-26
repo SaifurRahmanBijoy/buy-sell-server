@@ -44,6 +44,7 @@ async function run() {
       .db("wishBoat")
       .collection("categorisedProducts");
     const usersCollection = client.db("wishBoat").collection("users");
+    const bookingsCollection = client.db("wishBoat").collection("bookings");
 
     const verifyAdmin = async (req, res, next) => {
       const decodedEmail = req.decoded.email;
@@ -111,6 +112,12 @@ async function run() {
       const user = await usersCollection.findOne(query);
       // console.log(user);
       res.send({ isSeller: user?.role === "seller" });
+    });
+
+    app.post("/bookings", async (req, res) => {
+      const booking = req.body;
+      const result = await bookingsCollection.insertOne(booking);
+      res.send(result);
     });
 
     app.get("/jwt", async (req, res) => {
