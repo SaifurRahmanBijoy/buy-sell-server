@@ -71,9 +71,33 @@ async function run() {
       res.send(results);
     });
 
+    app.get("/products/:email", async (req, res) => {
+      const email = req.params.email;
+      const query = { seller_email: email };
+      const results = await productsCollection.find(query).toArray();
+      res.send(results);
+    });
+
     app.post("/add_products", async (req, res) => {
       const product = req.body;
       const result = await productsCollection.insertOne(product);
+      res.send(result);
+    });
+
+    app.post("/myproducts/:id", async (req, res) => {
+      const id = req.params.id;
+      const filter = { _id: ObjectId(id) };
+      const options = { upsert: true };
+      updatedDoc = {
+        $set: {
+          advertised: true,
+        },
+      };
+      const result = await productsCollection.updateOne(
+        filter,
+        updatedDoc,
+        options
+      );
       res.send(result);
     });
 
