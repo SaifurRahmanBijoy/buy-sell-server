@@ -125,7 +125,7 @@ async function run() {
       res.send(result);
     });
 
-    app.post("/myproducts/:id", async (req, res) => {
+    app.post("/myproducts/:id", verifyJWT, async (req, res) => {
       const id = req.params.id;
       const filter = { _id: ObjectId(id) };
       const options = { upsert: true };
@@ -222,7 +222,7 @@ async function run() {
       res.send({ isVerified: user?.verified === true });
     });
 
-    app.get("/bookings/:email", async (req, res) => {
+    app.get("/bookings/:email", verifyJWT, async (req, res) => {
       const email = req.params.email;
       const query = { userEmail: email };
       const result = await bookingsCollection.find(query).toArray();
