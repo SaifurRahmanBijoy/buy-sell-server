@@ -143,6 +143,14 @@ async function run() {
       res.send({ isSeller: user?.role === "seller" });
     });
 
+    app.get("/seller/:email", async (req, res) => {
+      const email = req.params.email;
+      const query = { email };
+      const user = await usersCollection.findOne(query);
+      // console.log(user);
+      res.send({ isVerified: user?.verified === true });
+    });
+
     app.get("/bookings/:email", async (req, res) => {
       const email = req.params.email;
       const query = { userEmail: email };
