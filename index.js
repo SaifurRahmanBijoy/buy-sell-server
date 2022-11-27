@@ -84,13 +84,15 @@ async function run() {
       res.send(results);
     });
 
+    // verifyJWT,verifyAdmin,
+
     app.get("/reporteditems", async (req, res) => {
       const query = { reported: true };
       const results = await productsCollection.find(query).toArray();
       res.send(results);
     });
 
-    app.post("/report/:id", async (req, res) => {
+    app.post("/report/:id", verifyJWT, async (req, res) => {
       const id = req.params.id;
       const filter = { _id: ObjectId(id) };
       const options = { upsert: true };
@@ -113,7 +115,7 @@ async function run() {
       res.send(result);
     });
 
-    app.delete("/deleteproduct/:id", async (req, res) => {
+    app.delete("/deleteproduct/:id", verifyJWT, async (req, res) => {
       const id = req.params.id;
       const product = { _id: ObjectId(id) };
       const result = await productsCollection.deleteOne(product);
