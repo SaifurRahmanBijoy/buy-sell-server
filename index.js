@@ -305,3 +305,6 @@ app.get("/", async (req, res) => {
 app.listen(port, () => {
   console.log("WISH BOAT IS RUNNING ON PORT:", port);
 });
+
+
+module.exports = app;
