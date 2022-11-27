@@ -78,6 +78,12 @@ async function run() {
       res.send(results);
     });
 
+    app.get("/advertiseditems", async (req, res) => {
+      const query = { advertised: true};
+      const results = await productsCollection.find(query).toArray();
+      res.send(results);
+    });
+
     app.post("/add_products", async (req, res) => {
       const product = req.body;
       const result = await productsCollection.insertOne(product);
