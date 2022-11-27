@@ -66,7 +66,7 @@ async function run() {
 
     app.get("/category/:id", async (req, res) => {
       const id = req.params.id;
-      const query = { category_id: id };
+      const query = { category_id: id || !paid };
       const results = await productsCollection.find(query).toArray();
       res.send(results);
     });
@@ -79,9 +79,32 @@ async function run() {
     });
 
     app.get("/advertiseditems", async (req, res) => {
-      const query = { advertised: true};
+      const query = { advertised: true };
       const results = await productsCollection.find(query).toArray();
       res.send(results);
+    });
+
+    app.get("/reporteditems", async (req, res) => {
+      const query = { reported: true };
+      const results = await productsCollection.find(query).toArray();
+      res.send(results);
+    });
+
+    app.post("/report/:id", async (req, res) => {
+      const id = req.params.id;
+      const filter = { _id: ObjectId(id) };
+      const options = { upsert: true };
+      updatedDoc = {
+        $set: {
+          reported: true,
+        },
+      };
+      const result = await productsCollection.updateOne(
+        filter,
+        updatedDoc,
+        options
+      );
+      res.send(result);
     });
 
     app.post("/add_products", async (req, res) => {
