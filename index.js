@@ -84,7 +84,8 @@ async function run() {
     app.get("/advertiseditems", async (req, res) => {
       const query = { advertised: true };
       const results = await productsCollection.find(query).toArray();
-      res.send(results);
+      const newResult= results.filter(result=>!result.paid)
+      res.send(newResult);
     });
 
     // verifyJWT,verifyAdmin,
